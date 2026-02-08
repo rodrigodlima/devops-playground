@@ -1,10 +1,14 @@
-# The differences between Runtime and Buildtime variables
+# The Differences Between Runtime and Build-Time Variables
 
-Do you know what the difference between runtime and build time variables?
+Do you know the difference between runtime and build-time variables?
 
-So, it's a very important topic.. is not a complexity topic, it's simple, but many professional dont know about it, and its an important topic. If you understand it, you will avoid many problems in your deploy or build.
+It's a very important topic. It's not a complex topic — it's actually simple — but many professionals don't know about it, and it's important. If you understand it, you will avoid many problems in your deployments or builds.
 
-## Runtime mode
+## Runtime
 
-It's more simple. All variable in runtime mode can be changed, and you need only restart your application. 
-Execution-time (or runtime) variables are values loaded when the application starts or while it is running. This approach offers much greater flexibility and is the standard for modern, dynamic applications. 
+It's simpler. All variables in runtime mode can be changed, and you only need to restart your application.
+Execution-time (or runtime) variables are values loaded when the application starts or while it is running. This approach offers much greater flexibility and is the standard for modern, dynamic applications.
+
+## Build Time
+
+Build-time variables are static values compiled directly into the application's binary or code. They cannot be changed without recompiling and redeploying the application.
