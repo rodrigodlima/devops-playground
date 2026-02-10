@@ -12,3 +12,9 @@ Execution-time (or runtime) variables are values loaded when the application sta
 ## Build Time
 
 Build-time variables are static values compiled directly into the application's binary or code. They cannot be changed without recompiling and redeploying the application.
+
+### Code examples
+
+#### NextJS
+
+For NextJS framework, environment variables used on the client-side must be defined at build time (prefixed with NEXT_PUBLIC_), because the browser cannot access server environment variables. However, for server-side code (API routes, Server Components, getServerSideProps), runtime environment variables can be used normally via process.env.
