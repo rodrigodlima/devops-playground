@@ -11,3 +11,5 @@ Link: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remot
 # Configuration
 
 You can create a .devcontainer folder in root directory of you project and create a Dockerfile and json config file 
+
+We have an example here. The project is to execute an Ansible playbook to configure a Postgresql HA server

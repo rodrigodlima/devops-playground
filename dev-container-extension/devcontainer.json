@@ -1,0 +1,21 @@
+{
+  "name": "Ansible - PostgreSQL HA",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "workspaceFolder": "/workspace/postgresql-ha-cluster",
+  "postCreateCommand": "ansible --version",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "redhat.ansible",
+        "redhat.vscode-yaml"
+      ]
+    }
+  }
+}
