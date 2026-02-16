@@ -4,6 +4,8 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+ARG NEXT_PUBLIC_APP_VERSION
+
 # Install dependencies
 COPY package.json ./
 RUN npm install --legacy-peer-deps
