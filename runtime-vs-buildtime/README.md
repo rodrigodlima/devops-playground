@@ -21,3 +21,7 @@ Build-time variables are static values compiled directly into the application's 
 For NextJS framework, environment variables used on the client-side must be defined at build time (prefixed with NEXT_PUBLIC_), because the browser cannot access server environment variables. However, for server-side code (API routes, Server Components, getServerSideProps), runtime environment variables can be used normally via process.env.
 
 See the run-time-vs-buildtime directory. I created an example of buildtime. For it, it's necessary to create a .env.local file with the variables. If you need to change these variables, it is necessary to rebuild the application.
+
+For example, in buildtime, you need to put the variable values on file .env.local. If the file does not exists, you need to pass the values on build time command, like that:
+
+docker build --build-arg NEXT_PUBLIC_VERSION=1.2.3 -t next-example .
