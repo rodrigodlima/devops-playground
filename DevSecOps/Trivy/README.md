@@ -183,3 +183,11 @@ Scan with:
 ```
 docker run --rm -v $(pwd)/Dockerfile-bad-practices:/scan trivy-scanner fs --scanners misconfig,secret /scan
 ```
+
+## SBOM Generation (Software Bill of Materials)
+
+Generate a full inventory of all components in your code:
+
+```
+docker run --rm -v $(pwd):/scan trivy-scanner fs --format cyclonedx --output sbom.json /scan
+```
