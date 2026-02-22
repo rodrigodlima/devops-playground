@@ -46,3 +46,6 @@ docker run --rm \
 | `secret` (built-in)        | Known patterns (AWS keys, tokens)     | `foobarbaz` is not a recognized pattern                  |
 | `misconfig`                | Insecure configurations in IaC        | Cloud schema intentionally omits the `password` field    |
 | `secret` + custom rule     | Any regex pattern                     | Works!                                                   |
+# Vulnerable Dependencies (CVE detection)
+
+To test vulnerability scan examples, I created a file python-code-example/requirements.txt with some old Python packages
