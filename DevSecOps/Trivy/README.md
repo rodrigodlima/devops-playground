@@ -164,6 +164,8 @@ docker run --rm -v $(pwd)/kubernetes-example:/scan trivy-scanner fs --scanners m
 
 Scan a public image with known CVEs directly:
 
+```
 docker run --rm trivy-scanner image python:3.6-slim
+```
 
 Old images like python:3.6, node:10, ubuntu:18.04 tend to have many findings.
