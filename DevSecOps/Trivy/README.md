@@ -139,3 +139,23 @@ Total: 20 (UNKNOWN: 0, LOW: 2, MEDIUM: 5, HIGH: 10, CRITICAL: 3)
 │          │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-47081                   │
 └──────────┴─────────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
 ```
+
+## Kubernetes Manifest Misconfigurations
+
+I created a pod.yaml file on kubernetes-example folder with common security mistakes (container running as root, no resource limits, privileged mode):
+
+```
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - image: nginx
+      securityContext:
+        privileged: true
+        runAsUser: 0
+```
+Scan with:
+
+```bash
+docker run --rm -v $(pwd)/kubernetes-example:/scan trivy-scanner fs --scanners misconfig /scan
+```
