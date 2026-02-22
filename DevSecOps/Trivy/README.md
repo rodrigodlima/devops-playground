@@ -169,3 +169,17 @@ docker run --rm trivy-scanner image python:3.6-slim
 ```
 
 Old images like python:3.6, node:10, ubuntu:18.04 tend to have many findings.
+
+## Dockerfile Bad Practices
+
+Create a Dockerfile using latest tag, running as root, exposing secrets:
+
+```
+FROM ubuntu:latest
+ENV DB_PASSWORD=supersecret123
+RUN apt-get update
+```
+Scan with:
+```
+docker run --rm -v $(pwd)/Dockerfile-bad-practices:/scan trivy-scanner fs --scanners misconfig,secret /scan
+```
