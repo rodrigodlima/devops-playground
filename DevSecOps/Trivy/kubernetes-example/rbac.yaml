@@ -1,0 +1,29 @@
+# Overly permissive RBAC - misconfiguration for demo
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: demo-app-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: demo-app-role
+rules:
+  # Wildcard permissions - overly broad (misconfiguration)
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: demo-app-binding
+subjects:
+  - kind: ServiceAccount
+    name: demo-app-sa
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: demo-app-role
+  apiGroup: rbac.authorization.k8s.io
