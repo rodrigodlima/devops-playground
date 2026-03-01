@@ -1,0 +1,48 @@
+# Intentionally misconfigured K8s manifest for demo
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      containers:
+        - name: demo-app
+          image: python:3.8-slim
+          ports:
+            - containerPort: 8080
+          # Running as root (misconfiguration)
+          securityContext:
+            runAsNonRoot: false
+            privileged: true
+            allowPrivilegeEscalation: true
+          # No resource limits (misconfiguration)
+          # resources: not defined
+          env:
+            # Secrets in plain text (misconfiguration)
+            - name: DB_PASSWORD
+              value: "Sup3rS3cr3tP@ssw0rd!"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-app-service
+spec:
+  selector:
+    app: demo-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  # Exposed publicly (misconfiguration)
+  type: LoadBalancer
