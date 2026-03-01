@@ -9,4 +9,4 @@ Scans a live cluster — nodes, pods, RBAC, and running images.
 
 To scan a Kubernetes YAML file for misconfigurations using Trivy, use the trivy fs (filesystem) command and specify the file path. Trivy automatically identifies Kubernetes files and scans them with built-in checks.
 
-```trivy fs pod.yaml```
+```trivy fs *.yaml```
