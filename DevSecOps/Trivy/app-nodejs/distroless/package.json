@@ -1,0 +1,10 @@
+{
+  "name": "hello-distroless",
+  "version": "1.0.0",
+  "description": "Hello World app for distroless Node.js image",
+  "main": "hello.js",
+  "scripts": {
+    "start": "node hello.js"
+  },
+  "dependencies": {}
+}
