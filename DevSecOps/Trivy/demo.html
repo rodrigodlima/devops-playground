@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trivy Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      padding: 24px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    h1 { font-size: 1.6rem; color: #7dd3fc; margin-bottom: 24px; }
+    h2 { font-size: 1rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+    .step {
+      background: #1e2330;
+      border-left: 3px solid #3b82f6;
+      border-radius: 6px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+    }
+    .step.secret  { border-color: #f59e0b; }
+    .step.sbom    { border-color: #10b981; }
+    .step.cicd    { border-color: #8b5cf6; }
+    .step.k8s     { border-color: #ef4444; }
+
+    .script {
+      font-size: 0.85rem;
+      color: #a78bfa;
+      font-style: italic;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .cmd-block {
+      position: relative;
+      margin-top: 6px;
+    }
+    pre {
+      background: #0d1117;
+      border-radius: 4px;
+      padding: 10px 44px 10px 12px;
+      font-size: 0.82rem;
+      color: #86efac;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.6;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #334155;
+      border: none;
+      color: #cbd5e1;
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .copy-btn:hover { background: #475569; }
+    .copy-btn.copied { background: #166534; color: #86efac; }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+      background: #1d4ed8;
+      color: #bfdbfe;
+    }
+    .step.secret .badge  { background: #92400e; color: #fde68a; }
+    .step.sbom   .badge  { background: #065f46; color: #a7f3d0; }
+    .step.cicd   .badge  { background: #4c1d95; color: #ddd6fe; }
+    .step.k8s    .badge  { background: #7f1d1d; color: #fecaca; }
+    .note {
+      margin-top: 14px;
+      background: #1a1a2e;
+      border: 1px dashed #f59e0b;
+      border-radius: 5px;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .note strong:first-child { color: #fbbf24; display: block; margin-bottom: 8px; }
+    .note p { margin-bottom: 6px; }
+    .note p:last-child { margin-bottom: 0; }
+    .note code { background: #0d1117; padding: 1px 5px; border-radius: 3px; color: #86efac; }
+  </style>
+</head>
+<body>
+
+<h1>Trivy Live Demo</h1>
+
+<!-- 1 -->
+<div class="step">
+  <span class="badge">SETUP</span>
+  <h2>1 · Download DB</h2>
+  <p class="script">Before we start, Trivy needs its vulnerability database. Let's pull it once.</p>
+  <div class="cmd-block">
+    <pre>trivy image --download-db-only</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="step">
+  <span class="badge">IMAGE SCAN</span>
+  <h2>2 · Scan regular Alpine image</h2>
+  <p class="script">Here's a Node app built on Alpine. Trivy finds HIGH and CRITICAL CVEs — there's quite a list.</p>
+  <div class="cmd-block">
+    <pre>trivy image --ignore-status fixed --severity HIGH,CRITICAL hello-nodejs24-alpine:latest</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="step">
+  <span class="badge">IMAGE SCAN</span>
+  <h2>3 · Scan Distroless image</h2>
+  <p class="script">Same app, distroless base. No shell, no package manager — attack surface drops dramatically.</p>
+  <div class="cmd-block">
+    <pre>trivy image --ignore-status fixed --severity HIGH,CRITICAL hello-nodejs24-distroless:latest</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+  <div class="note">
+    <strong>⚠ Not in the presentation — but worth knowing:</strong>
+    <p>
+      <strong>Distroless images</strong> contain only your application and its runtime dependencies — no shell (<code>bash</code>/<code>sh</code>), no package manager (<code>apt</code>/<code>apk</code>), no system tools.
+      They are maintained by Google and are available for Node, Python, Java, Go, and others.
+    </p>
+    <p>
+      From a security standpoint this matters a lot: if an attacker exploits a vulnerability in your app, they land in a container with almost nothing to work with — no way to download tools, run scripts, or pivot easily.
+      Combined with the smaller image size, it significantly reduces your attack surface.
+    </p>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="step">
+  <span class="badge">IMAGE SCAN</span>
+  <h2>4 · Compare image sizes</h2>
+  <p class="script">Distroless is also smaller. Less bloat, less exposure.</p>
+  <div class="cmd-block">
+    <pre>docker image ls --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.CreatedSince}}\t{{.Size}}" | grep hello</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="step">
+  <span class="badge">IMAGE SCAN</span>
+  <h2>5 · Show only unfixed CVEs</h2>
+  <p class="script">Not every CVE has a patch yet. With <code>--ignore-status fixed</code> we focus only on what currently has no fix — these are the ones that actually keep you awake.</p>
+  <div class="cmd-block">
+    <pre>trivy image --ignore-status fixed --severity HIGH,CRITICAL python:3.13.12-slim-trixie</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="step secret">
+  <span class="badge">SECRETS</span>
+  <h2>6 · Secret scanning – filesystem</h2>
+  <p class="script">Trivy also finds secrets committed to the repo. Watch it catch API keys, tokens, and more in seconds.</p>
+  <div class="cmd-block">
+    <pre>trivy fs --scanners secret .</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+</div>
+
+<!-- 7 -->
+<div class="step secret">
+  <span class="badge">SECRETS</span>
+  <h2>7 · Custom secret rules</h2>
+  <p class="script">Generic patterns won't catch something like a plain <code>DB_PASSWORD</code>. With a custom config we define our own regex rules to cover internal secrets.</p>
+  <div class="cmd-block">
+    <pre>trivy fs --scanners secret --secret-config ./trivy-secret.yaml ../python-code-example/ 2>&amp;1</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+</div>
+
+<!-- 8 -->
+<div class="step sbom">
+  <span class="badge">SBOM</span>
+  <h2>8 · Generate SBOM &amp; scan it</h2>
+  <p class="script">We can export a full Software Bill of Materials in CycloneDX format, then scan the SBOM directly — useful for audits or offline pipelines.</p>
+  <div class="cmd-block">
+    <pre>trivy image --format cyclonedx --output /tmp/python-sbom.json python:3.8-slim</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+  <div class="cmd-block" style="margin-top:8px">
+    <pre>trivy sbom --ignore-status fixed --severity HIGH,CRITICAL /tmp/python-sbom.json</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+</div>
+
+<!-- 9 -->
+<div class="step cicd">
+  <span class="badge">CI/CD</span>
+  <h2>9 · Break the pipeline on CRITICAL</h2>
+  <p class="script">In CI, <code>--exit-code 1</code> makes Trivy fail the build when criticals are found — the pipeline stops, the team is forced to act.</p>
+  <div class="cmd-block">
+    <pre>trivy image --exit-code 1 --severity CRITICAL python:3.8-slim; echo "Exit code: $?"</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+  <div class="cmd-block" style="margin-top:8px">
+    <pre>trivy image --severity CRITICAL python:3.8-slim; echo "Exit code: $?"</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+  <p class="script" style="margin-top:8px">Without the flag, Trivy reports but exits 0 — pipeline keeps going. Your choice.</p>
+</div>
+
+<!-- 10 -->
+<div class="step k8s">
+  <span class="badge">KUBERNETES</span>
+  <h2>10 · Cluster misconfiguration scan</h2>
+  <p class="script">Finally, Trivy can scan a live cluster for misconfigurations — privileged pods, missing network policies, and more.</p>
+  <div class="cmd-block">
+    <pre>trivy k8s --scanners misconfig --report all minikube</pre>
+    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
+  </div>
+</div>
+
+<script>
+  function copyCmd(btn) {
+    const text = btn.previousElementSibling.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+</script>
+</body>
+</html>
