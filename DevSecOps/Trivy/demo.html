@@ -131,35 +131,8 @@
   <div class="note">
     <strong>⚠ Not in the presentation — but worth knowing:</strong>
     <p>
-      <strong>Distroless images</strong> contain only your application and its runtime dependencies — no shell (<code>bash</code>/<code>sh</code>), no package manager (<code>apt</code>/<code>apk</code>), no system tools.
-      They are maintained by Google and are available for Node, Python, Java, Go, and others.
+      <strong>Distroless images</strong> This helps reduce the attack surface, but that's a topic for another presentation.
     </p>
-    <p>
-      From a security standpoint this matters a lot: if an attacker exploits a vulnerability in your app, they land in a container with almost nothing to work with — no way to download tools, run scripts, or pivot easily.
-      Combined with the smaller image size, it significantly reduces your attack surface.
-    </p>
-  </div>
-</div>
-
-<!-- 4 -->
-<div class="step">
-  <span class="badge">IMAGE SCAN</span>
-  <h2>4 · Compare image sizes</h2>
-  <p class="script">Distroless is also smaller. Less bloat, less exposure.</p>
-  <div class="cmd-block">
-    <pre>docker image ls --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.CreatedSince}}\t{{.Size}}" | grep hello</pre>
-    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
-  </div>
-</div>
-
-<!-- 5 -->
-<div class="step">
-  <span class="badge">IMAGE SCAN</span>
-  <h2>5 · Show only unfixed CVEs</h2>
-  <p class="script">Not every CVE has a patch yet. With <code>--ignore-status fixed</code> we focus only on what currently has no fix — these are the ones that actually keep you awake.</p>
-  <div class="cmd-block">
-    <pre>trivy image --ignore-status fixed --severity HIGH,CRITICAL python:3.13.12-slim-trixie</pre>
-    <button class="copy-btn" onclick="copyCmd(this)">copy</button>
   </div>
 </div>
 
@@ -169,7 +142,7 @@
   <h2>6 · Secret scanning – filesystem</h2>
   <p class="script">Trivy also finds secrets committed to the repo. Watch it catch API keys, tokens, and more in seconds.</p>
   <div class="cmd-block">
-    <pre>trivy fs --scanners secret .</pre>
+    <pre>trivy fs --scanners secret python-code-example</pre>
     <button class="copy-btn" onclick="copyCmd(this)">copy</button>
   </div>
 </div>
@@ -180,7 +153,7 @@
   <h2>7 · Custom secret rules</h2>
   <p class="script">Generic patterns won't catch something like a plain <code>DB_PASSWORD</code>. With a custom config we define our own regex rules to cover internal secrets.</p>
   <div class="cmd-block">
-    <pre>trivy fs --scanners secret --secret-config ./trivy-secret.yaml ../python-code-example/ 2>&amp;1</pre>
+    <pre>trivy fs --scanners secret --secret-config ./custom-secret-scanning/trivy-secret.yaml ./python-code-example/ 2>&amp;1</pre>
     <button class="copy-btn" onclick="copyCmd(this)">copy</button>
   </div>
 </div>
