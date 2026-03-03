@@ -28,6 +28,33 @@ trivy fs --scanners misconfig \
 
 These are custom **regex-based rules** for Trivy's secret scanner. They extend the built-in secret detection patterns with your own patterns.
 
+#### Rules defined
+
+| ID | Title | Severity | Applies to |
+|----|-------|----------|------------|
+| `TF-HARDCODED-PASSWORD` | Terraform Hardcoded Password in Resource | CRITICAL | `*.tf` files |
+| `PY-HARDCODED-DB-PASSWORD` | Python Hardcoded DB_PASSWORD | CRITICAL | `*.py` files |
+
+**`TF-HARDCODED-PASSWORD`** — detects hardcoded password assignments in Terraform files:
+```
+password\s*=\s*"[^"]+
+```
+Example match:
+```hcl
+password = "mysecretpassword"
+```
+
+**`PY-HARDCODED-DB-PASSWORD`** — detects `DB_PASSWORD` variable assignments in Python files:
+```
+DB_PASSWORD\s*=\s*["'][^"']+["']
+```
+Example match:
+```python
+DB_PASSWORD = "mysecretpassword"
+```
+
+#### Running the scanner
+
 Run with:
 ```bash
 trivy fs --scanners secret \
