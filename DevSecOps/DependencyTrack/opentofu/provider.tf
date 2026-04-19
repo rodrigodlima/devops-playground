@@ -10,5 +10,5 @@ terraform {
 provider "aws" {
     shared_config_files      = ["/Users/rodrigo/.aws/config"]
     shared_credentials_files = ["/Users/rodrigo/.aws/credentials"]
-    profile                  = "customprofile"
+    profile                  = "default"
 }

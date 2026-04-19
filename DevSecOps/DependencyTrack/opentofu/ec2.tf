@@ -1,8 +1,25 @@
-# Create a new host with instance type of c5.18xlarge with Auto Placement
-# and Host Recovery enabled.
-resource "aws_ec2_host" "dependency_track" {
-  instance_type     = "t2.large"
-  availability_zone = "us-west-2a"
-  host_recovery     = "off"
-  auto_placement    = "on"
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
+resource "aws_instance" "dependency_track" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.large"
+
+  tags = {
+    Name = "security"
+    ProvsionedBy = "opentofu"
+  }
 }
