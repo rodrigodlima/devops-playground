@@ -17,6 +17,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "dependency_track" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.large"
+  user_data     = file("${path.module}/user-data.sh")
 
   tags = {
     Name = "security"
