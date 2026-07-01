@@ -1,4 +1,16 @@
+app:
+  baseUrl: http://localhost:7007
+
 backend:
+  baseUrl: http://localhost:7007
+  listen:
+    host: 0.0.0.0
+    port: 7007
+  cors:
+    origin: http://localhost:7007
+  auth:
+    keys:
+      - secret: ${BACKEND_SECRET}
   database:
     client: pg
     connection:
