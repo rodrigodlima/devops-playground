@@ -86,7 +86,7 @@ kubectl port-forward -n backstage svc/backstage 7007:80
 ## Status
 
 - [x] Backstage + PostgreSQL running on Kubernetes
-- [ ] Crossplane control plane + Compositions (self-service infra)
+- [x] Crossplane control plane + Compositions (self-service infra) - In progress
 - [ ] Argo CD for GitOps delivery of platform + apps
 - [ ] GitHub Actions CI pipelines wired to Backstage software templates
 - [ ] Backstage software templates (golden paths)
@@ -105,3 +105,21 @@ kubectl port-forward -n backstage svc/backstage 7007:80
 - [Crossplane](https://docs.crossplane.io)
 - [Argo CD](https://argo-cd.readthedocs.io)
 - [What is an IDP? (CNCF)](https://tag-app-delivery.cncf.io/whitepapers/platforms/)
+
+## Crossplane
+
+### Install Crossplane
+```
+helm install crossplane \
+--namespace crossplane-system \
+--create-namespace crossplane-stable/crossplane
+```
+
+View the installed Crossplane pods with kubectl get pods -n crossplane-system
+
+```
+$ kubectl get pods -n crossplane-system
+NAME                                       READY   STATUS    RESTARTS   AGE
+crossplane-6d67f8cd9d-g2gjw                1/1     Running   0          26m
+crossplane-rbac-manager-86d9b5cf9f-2vc4s   1/1     Running   0          26m
+```
