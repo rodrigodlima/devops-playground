@@ -99,6 +99,10 @@ kubectl port-forward -n backstage svc/backstage 7007:80
 - `postgres-storage.yaml` uses a `hostPath` PersistentVolume — fine for local
   clusters, not for production.
 
+## Component docs
+
+- [Argo CD](argocd.md) — install, access, register applications
+
 ## References
 
 - [Backstage](https://backstage.io/docs)
